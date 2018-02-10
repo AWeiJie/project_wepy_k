@@ -1,0 +1,15 @@
+
+  <view>
+    <view class="chart-container">
+      <view class="tab">
+        <view bindtap="tab" class="{{chartType === 'day'? 'action': ''}}" data-wpytab-a="day">日K<icon/></view>
+        <view bindtap="tab" class="{{chartType === 'week'? 'action': ''}}" data-wpytab-a="week">周K<icon/></view>
+        <view bindtap="tab" class="{{chartType === 'month'? 'action': ''}}" data-wpytab-a="month">月K<icon/></view>
+        <view bindtap="tab" class="{{chartType === 'minute'? 'action': ''}}" data-wpytab-a="minute">60分钟<icon/></view>
+      </view>
+          <canvas canvas-id="k-line" class="stage" style="width: 100%; height: 160px;"/>
+          <canvas canvas-id="k-line-b" class="stage" style="width: 100%; height: 80px;"/>
+
+    </view>
+
+  </view>

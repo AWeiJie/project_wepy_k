@@ -1,0 +1,2 @@
+@import "./../components/modal.wxss";
+page{color:#181B24;background-color:#f2f3f5}.search-container{font-size:32rpx;background-color:#fff}.search-container .search{display:flex;width:100%;line-height:60rpx;padding:0 20rpx;position:relative;box-sizing:border-box;padding-bottom:20rpx;padding-top:20rpx}.search-container .search icon{position:absolute;left:40rpx;top:36rpx}.search-container .search input{flex:1;height:60rpx;padding-left:60rpx;border-radius:40rpx;background-color:#f2f3f5}.search-container .search .btn{margin-left:37rpx}

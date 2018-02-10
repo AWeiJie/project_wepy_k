@@ -1,0 +1,56 @@
+<style lang="scss">
+page {
+  background: #1c1f27;
+}
+</style>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/k',
+        'pages/ts'
+      ],
+      window: {
+        navigationBarBackgroundColor: '#262834',
+        navigationBarTitleText: '股票K线图',
+        backgroundColor: '#1C1F27',
+        navigationBarTextStyle: 'white'
+      },
+      tabBar: {
+        list: [
+          {
+            pagePath: 'pages/ts',
+            text: '分时图'
+          },
+          {
+            pagePath: 'pages/k',
+            text: 'K线'
+          }
+        ],
+        color: '#c2c4d0',
+        selectedColor: '#3483e9',
+        backgroundColor: '#252934'
+      },
+      debug: true
+    }
+
+    globalData = {
+
+    }
+
+    onHide () {
+
+    }
+
+    onShow () {
+
+    }
+
+    onUnload() {
+
+    }
+  }
+</script>

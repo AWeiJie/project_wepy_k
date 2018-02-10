@@ -1,0 +1,148 @@
+<style lang="scss">
+page {
+  font-size: 28rpx;
+  color: #fff;
+  background-color: black;
+}
+
+.chart-container {
+  .tab {
+    display: flex;
+    height: 70rpx;
+    line-height: 70rpx;
+    margin-bottom: 20rpx;
+    border-bottom: 2rpx solid #333333;
+
+    view {
+      position: relative;
+      flex: 1;
+      text-align: center;
+    }
+
+    view.action {
+      color: #336699;
+
+      icon {
+        position: absolute;
+        left: 50%;
+        bottom: -2rpx;
+        margin-left: -50rpx;
+        width: 100rpx;
+        height: 5rpx;
+        background-color: #336699;
+      }
+    }
+  }
+}
+
+
+</style>
+
+<template>
+  <view>
+    <view class="chart-container">
+      <view class="tab">
+        <view  @tap="tab('day')" class="{{chartType === 'day'? 'action': ''}}">日K<icon></icon></view>
+        <view @tap="tab('week')" class="{{chartType === 'week'? 'action': ''}}">周K<icon></icon></view>
+        <view @tap="tab('month')" class="{{chartType === 'month'? 'action': ''}}">月K<icon></icon></view>
+        <view @tap="tab('minute')" class="{{chartType === 'minute'? 'action': ''}}">60分钟<icon></icon></view>
+      </view>
+          <canvas canvas-id="k-line" class="stage" style="width: 100%; height: 160px;"></canvas>
+          <canvas canvas-id="k-line-b" class="stage" style="width: 100%; height: 80px;"></canvas>
+
+    </view>
+
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  import storage from '../utils/storage'
+  import kl from '../utils/wxChart/k-line'
+  import common from '../utils/common'
+
+  export default class Chart extends wepy.page {
+    config = {
+      navigationBarBackgroundColor: '#333333',
+      navigationBarTextStyle: 'white'
+    }
+
+    components = {
+
+    }
+
+    mixins = []
+
+    data = {
+      kLine: null, // 价格走势图对象
+      kLineB: null, // 买卖走势图对象
+      ma5Arr: null,
+      ma5bArr: null,
+      ma10Arr: null,
+      ma10bArr: null,
+      ma20Arr: null,
+      ma20bArr: null,
+      ma5: '',
+      ma10: '',
+      ma20: '',
+      ma5b: '',
+      ma10b: '',
+      ma20b: '',
+      tabName: '',
+      stock: '',
+      code: '',
+      time: '',
+      yc: '',
+      kl1RenderTime: 0,
+      kl2RenderTime: 0,
+      minIndex: 3,
+      minArray: ['5分钟', '15分钟', '30分钟', '60分钟'],
+      chartType: 'day' // K线图类型
+    }
+
+    computed = {
+
+    }
+
+    watch = {
+
+    }
+
+    methods = {
+      // tab切换K图
+      tab (type) {
+        this.chartType = type
+        // if (this.chartType === 'ts') {
+        //   this.painTs()
+        // } else {
+        //   this.iniTs5()
+        // }
+        this.$apply()
+      }
+    }
+
+    // 绘制日K线图
+    paintDataK () {
+      const data = storage.getDkData()
+      this.kLine = kl('k-line').init(common.getOptionKline1('dk'))
+      this.kLine.metaData1(data, common.getOptionKline1('dk'))
+      this.kLine.draw()
+
+      this.kLineB = kl('k-line-b').init(common.getOptionKline2('dk'))
+      this.kLineB.metaData2(data, common.getOptionKline2('dk'))
+      this.kLineB.draw()
+    }
+
+    events = {}
+
+    onLoad(options) {
+      this.paintDataK()
+    }
+
+    onUnload () {
+
+    }
+  }
+</script>

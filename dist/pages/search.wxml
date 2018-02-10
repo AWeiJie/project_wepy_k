@@ -1,0 +1,9 @@
+
+  <view class="search-container">
+     <view class="search">
+      <icon type="search" size="16"/>
+      <input placeholder="搜索股票名称或代码" type="text" confirm-type="搜索" bindinput="getKeyword" bindconfirm="search" value="{{keyword}}" focus="true"/>
+      <text class="btn" bindtap="search"  wx:if="{{keyword}}" data-wpysearch-a="">搜索</text>
+      <text class="btn" bindtap="out"  wx:else data-wpyout-a="">取消</text>
+    </view>
+  </view>

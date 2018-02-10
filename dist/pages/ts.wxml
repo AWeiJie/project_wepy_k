@@ -1,0 +1,28 @@
+
+  <view>
+    <view class="chart-container">
+      <view class="tab">
+        <view bindtap="tab" class="{{chartType === 'ts'? 'action': ''}}" data-wpytab-a="ts">分时<icon/></view>
+        <view bindtap="tab" class="{{chartType === 'tsd5'? 'action': ''}}" data-wpytab-a="tsd5">五日<icon/></view>
+      </view>
+
+      <view class="canvas-wrapper">
+        <view  wx:if="{{chartType === 'ts'}}" class="tscanvas-wrapper">
+          <view class="tscanvas canvas-wrap">
+            <canvas canvas-id="time-sharing" class="stage" style="width: 100%; height: 200px">
+            </canvas>
+            <canvas canvas-id="time-sharing-b" class="stage" style="width: 100%; height: 80px">
+            </canvas>
+          </view>
+        </view>
+
+        <view  wx:if="{{chartType === 'tsd5'}}">
+          <canvas canvas-id="time-sharing-5day" class="stage" style="width: 100%; height: 200px">
+          </canvas>
+          <canvas canvas-id="time-sharing-5day-b" class="stage" style="width: 100%; height: 80px">
+          </canvas>
+        </view>
+      </view>
+    </view>
+
+  </view>

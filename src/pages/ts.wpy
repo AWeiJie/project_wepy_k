@@ -1,0 +1,177 @@
+<style lang="scss">
+page {
+  font-size: 28rpx;
+  color: #fff;
+  background-color: black;
+}
+
+.chart-container {
+  .tab {
+    display: flex;
+    height: 70rpx;
+    line-height: 70rpx;
+    margin-bottom: 20rpx;
+    border-bottom: 2rpx solid #333333;
+
+    view {
+      position: relative;
+      flex: 1;
+      text-align: center;
+    }
+
+    view.action {
+      color: #336699;
+
+      icon {
+        position: absolute;
+        left: 50%;
+        bottom: -2rpx;
+        margin-left: -50rpx;
+        width: 100rpx;
+        height: 5rpx;
+        background-color: #336699;
+      }
+    }
+  }
+}
+
+
+</style>
+
+<template>
+  <view>
+    <view class="chart-container">
+      <view class="tab">
+        <view  @tap="tab('ts')" class="{{chartType === 'ts'? 'action': ''}}">分时<icon></icon></view>
+        <view @tap="tab('tsd5')" class="{{chartType === 'tsd5'? 'action': ''}}">五日<icon></icon></view>
+      </view>
+
+      <view class="canvas-wrapper">
+        <view wx:if="{{chartType === 'ts'}}" class="tscanvas-wrapper">
+          <view class="tscanvas canvas-wrap">
+            <canvas canvas-id="time-sharing" class="stage" style="width: 100%; height: 200px">
+            </canvas>
+            <canvas canvas-id="time-sharing-b" class="stage" style="width: 100%; height: 80px">
+            </canvas>
+          </view>
+        </view>
+
+        <view wx:if="{{chartType === 'tsd5'}}">
+          <canvas canvas-id="time-sharing-5day" class="stage" style="width: 100%; height: 200px">
+          </canvas>
+          <canvas canvas-id="time-sharing-5day-b" class="stage" style="width: 100%; height: 80px">
+          </canvas>
+        </view>
+      </view>
+    </view>
+
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  import storage from '../utils/storage'
+  import ts from '../utils/wxChart/time-sharing'
+  import common from '../utils/common'
+
+  export default class Chart extends wepy.page {
+    config = {
+      navigationBarBackgroundColor: '#333333',
+      navigationBarTextStyle: 'white'
+    }
+
+    components = {
+
+    }
+
+    mixins = []
+
+    data = {
+      ts1: null, // 价格走势图对象
+      ts2: null, // 买卖走势图对象
+      tsd51: null,
+      tsd52: null,
+      chartType: 'ts' // K线图类型
+    }
+
+    computed = {
+
+    }
+
+    watch = {
+
+    }
+
+    methods = {
+      // tab切换分时图&日K图
+      tab (type) {
+        this.chartType = type
+        if (this.chartType === 'ts') {
+          this.painTs()
+        } else {
+          this.iniTs5()
+        }
+        this.$apply()
+      }
+    }
+
+    // 调用ts1的方法进行绘制走势图
+    renderTs1 (data, canvasWidth) {
+      this.ts1.metaData1(data, common.getOptionTimeSharing1('', canvasWidth))
+      this.ts1.draw()
+    }
+
+    // 调用ts2的方法进行绘制成交量条形图
+    renderTs2 (data, canvasWidth) {
+      this.ts2.metaData2(data, common.getOptionTimeSharing2('', canvasWidth))
+      this.ts2.draw()
+    }
+
+    // 开始绘制分时图
+    painTs () {
+      // 设置canvas的宽度
+      let canvasWidth = 0
+      wepy.getSystemInfo({
+        success: function (result) {
+          canvasWidth = result.windowWidth
+        }
+      })
+      const data = storage.getTsData()// 调用模拟数据
+      this.ts1 = ts('time-sharing').init(common.getOptionTimeSharing1('', canvasWidth)) // 获得关于分时走势图的对象
+      this.renderTs1(data, canvasWidth) // 调用方法进行绘制分时走势图
+      this.ts2 = ts('time-sharing-b').init(common.getOptionTimeSharing2('', canvasWidth)) // 获得关于分时条形图的对象
+      this.renderTs2(data, canvasWidth) // 调用方法进行绘制分时条形图
+      this.$apply()
+    }
+
+    // 开始绘制五日图
+    iniTs5 () {
+      // 设置canvas的宽度
+      let canvasWidth = 0
+      wepy.getSystemInfo({
+        success: function (result) {
+          canvasWidth = result.windowWidth
+        }
+      })
+      const data = storage.getTs5Data()// 调用模拟数据
+      this.tsd51 = ts('time-sharing-5day').init(common.getOptionTimeSharing1('time-sharing-5day', canvasWidth))
+      this.tsd52 = ts('time-sharing-5day-b').init(common.getOptionTimeSharing2('time-sharing-5day', canvasWidth))
+      this.tsd51.metaData1(data, common.getOptionTimeSharing1('time-sharing-5day', canvasWidth))
+      this.tsd51.draw()
+      this.tsd52.metaData2(data, common.getOptionTimeSharing2('time-sharing-5day', canvasWidth))
+      this.tsd52.draw()
+    }
+
+    events = {}
+
+    onLoad(options) {
+      this.painTs()
+    }
+
+    onUnload () {
+
+    }
+  }
+</script>
